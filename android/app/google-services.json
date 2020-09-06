@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "316825827292",
+    "firebase_url": "https://kazimanagerone.firebaseio.com",
+    "project_id": "kazimanagerone",
+    "storage_bucket": "kazimanagerone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:316825827292:android:9fec2777abf53a67be8119",
+        "android_client_info": {
+          "package_name": "com.example.kazimanager_withauth"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "316825827292-ppi848iiar1qv70ar4bsuovnlhn4ok46.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoyLK_NgprRaPOurwxVvI8dzvfHfNncS0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "316825827292-ppi848iiar1qv70ar4bsuovnlhn4ok46.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:316825827292:android:1ea0155883cab7e2be8119",
+        "android_client_info": {
+          "package_name": "com.example.theApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "316825827292-ppi848iiar1qv70ar4bsuovnlhn4ok46.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoyLK_NgprRaPOurwxVvI8dzvfHfNncS0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "316825827292-ppi848iiar1qv70ar4bsuovnlhn4ok46.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
