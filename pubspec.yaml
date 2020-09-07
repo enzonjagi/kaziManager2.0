@@ -32,6 +32,7 @@ dependencies:
   shared_preferences: ^0.5.10
   random_string: ^2.1.0
   firebase_storage: ^4.0.0
+  progress_indicators: ^0.1.5
 
 
 

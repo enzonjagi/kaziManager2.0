@@ -1,11 +1,13 @@
-import 'dart:html';
+//import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:kazimanager_withauth/screens/authenticate/signUp.dart';
+import 'package:kazimanager_withauth/screens/home/home.dart';
 import 'package:kazimanager_withauth/screens/widgets/widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:kazimanager_withauth/services/auth.dart';
+import 'package:progress_indicators/progress_indicators.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -15,17 +17,65 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
   String email, password;
-  UserCredential userCredential ;
-  signIn(){
-    if(_formKey.currentState.validate()){
-      //userCredential.signInEmail
+  /*bool _initialized = false;
+  bool _error = false;*/
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
+  //final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  //TODO find the new FlutterFire implementation on this
+  /*void initializeFlutterFire() async {
+    try {
+      // Wait for Firebase to initialize and set `_initialized` state to true
+      await Firebase.initializeApp();
+      setState(() {
+        _initialized = true;
+      });
+    } catch (e) {
+      // Set `_error` state to true if Firebase initialization fails
+      setState(() {
+        _error = true;
+      });
     }
   }
 
   @override
+  void initState() {
+    initializeFlutterFire();
+    super.initState();
+  }*/
+
+  AuthService authService = new AuthService();
+  bool _isLoading = false;
+
+  signIn() async {
+    //await authService.initiialize();
+    if (_formKey.currentState.validate()) {
+      //userCredential.signInEmail
+      //UserCredential userCredential
+      //TODO find the new FlutterFire implementation on this
+
+      setState(() {
+        _isLoading = true;
+      });
+
+      await authService.signInEmailandPass(email, password).then((val) {
+        if (val != null) {
+          setState(() {
+            _isLoading = false;
+          });
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => Home()));
+        }
+      });
+    }
+    _formKey.currentState.save();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    //if initialization fails
+    
     return Scaffold(
       appBar: AppBar(
         title: appBar(context),
@@ -33,73 +83,89 @@ class _SignInState extends State<SignIn> {
         elevation: 0.0,
         brightness: Brightness.light,
       ),
-      body: Form(
-        key: _formKey,
-        child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              children: [
-                Spacer(),
-                TextFormField(
-                  validator: (val) {
-                    return val.isEmpty ? "Enter correct email" : null;
-                  },
-                  decoration: InputDecoration(hintText: "Email"),
-                  onChanged: (val) {
-                    email = val;
-                  },
-                ),
-                SizedBox(height: 6),
-                TextFormField(
-                  validator: (val) {
-                    return val.isEmpty ? "Enter correct password" : null;
-                  },
-                  decoration: InputDecoration(hintText: "password"),
-                  onChanged: (val) {
-                    password = val;
-                  },
-                ),
-                SizedBox(height: 16),
-                GestureDetector(
-                  onTap: () {
-                    //sign in button; logs user in
-                    signIn();
+      body: _isLoading
+          ? Container(
+              child: Center(
+              //before the login completes
+              child: CircularProgressIndicator(),
+            ))
+          : Form(
+              key: _formKey,
+              child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    children: [
+                      Spacer(),
+                      TextFormField(
+                        validator: (val) {
+                          if (val.isEmpty) {
+                            return 'Email is required';
+                          }
 
-                  },
-                  child: Container(
-                    color: Colors.brown,
-                    padding: EdgeInsets.symmetric(vertical: 18),
-                    decoration: BoxDecoration(
-                        color: Colors.brown,
-                        borderRadius: BorderRadius.circular(30)),
-                    alignment: Alignment.center,
-                    width: MediaQuery.of(context).size.width - 48,
-                    child: Text(
-                      "Login",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Text("Not registered?", style: TextStyle(fontSize: 15)),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(context, MaterialPageRoute(
-                        builder: (context) => SignUp()
-                        )
-                      );
-                    },
-                    child: Text("SignUp",
-                        style: TextStyle(
-                            fontSize: 15,
-                            decoration: TextDecoration.underline)),
-                  ),
-                ]),
-                SizedBox(height: 80)
-              ],
-            )),
-      ),
+                          if (!RegExp(
+                                  "^[a-zA-Z0-9.!#%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*")
+                              .hasMatch(val)) {
+                            return 'Enter a valid email address';
+                          }
+                        },
+                        decoration: InputDecoration(hintText: "Email"),
+                        onChanged: (val) {
+                          email = val;
+                        },
+                      ),
+                      SizedBox(height: 6),
+                      TextFormField(
+                        validator: (val) {
+                          return val.isEmpty ? "Enter correct password" : null;
+                        },
+                        decoration: InputDecoration(hintText: "password"),
+                        onChanged: (val) {
+                          password = val;
+                        },
+                        obscureText: true,
+                      ),
+                      SizedBox(height: 16),
+                      GestureDetector(
+                        onTap: () {
+                          //sign in button; logs user in
+                          signIn();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 18),
+                          decoration: BoxDecoration(
+                              color: Colors.brown,
+                              borderRadius: BorderRadius.circular(30)),
+                          alignment: Alignment.center,
+                          width: MediaQuery.of(context).size.width - 48,
+                          child: Text(
+                            "Login",
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Not registered?",
+                                style: TextStyle(fontSize: 15)),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SignUp()));
+                              },
+                              child: Text("SignUp",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      decoration: TextDecoration.underline)),
+                            ),
+                          ]),
+                      SizedBox(height: 80)
+                    ],
+                  )),
+            ),
     );
     //here
   }

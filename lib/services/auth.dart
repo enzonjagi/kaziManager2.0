@@ -19,15 +19,29 @@ class AuthService {
   }*/
 
   //sign in anon
+  Future initiialize() async {
+    try {
+      // Wait for Firebase to initialize and set `_initialized` state to true
+      await Firebase.initializeApp();
+      
+    } catch(e) {
+      // Set `_error` state to true if Firebase initialization fails
+      
+    }
+  }
   dynamic signInAnon() async {
     UserCredential userCredential = await _auth.signInAnonymously();
+    return userCredential;
   }
 
   //signin email and password
   dynamic signInEmailandPass(String email, password) async {
+    await _initialization;
     try {
-      UserCredential userCredential = await _auth
-          .signInWithEmailAndPassword(email: email, password: password);
+      //await _initialization;
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      return userCredential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -39,11 +53,12 @@ class AuthService {
 
   //register with email and password
   dynamic createUser(String email, password) async {
+    await _initialization;
     try {
+      
       UserCredential userCredential = await _auth
-          .createUserWithEmailAndPassword(
-              email: email,
-              password: password);
+          .createUserWithEmailAndPassword(email: email, password: password);
+      return userCredential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -66,21 +81,18 @@ class AuthService {
   }*/
 
   //signout
-  dynamic signOut() async{
-    try{
-
+  dynamic signOut() async {
+    try {
+      
       return await _auth.signOut();
-
-    }catch(e){
+    } catch (e) {
       print(e.toString());
       return null;
-
     }
   }
 
   //google sign in
 
   //phone sign in
-
 
 }
