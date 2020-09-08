@@ -2,95 +2,93 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:kazimanager_withauth/helper/functions.dart';
 import 'package:kazimanager_withauth/screens/authenticate/signIn.dart';
 import 'package:kazimanager_withauth/screens/authenticate/signUp.dart';
 import 'package:kazimanager_withauth/screens/widgets/widget.dart';
 import 'package:kazimanager_withauth/screens/wrapper.dart';
+import 'package:kazimanager_withauth/screens/home/home.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(App()
+    
+    /*MaterialApp(
+    home: Home(),
+    debugShowCheckedModeBanner: false,
+  )*/
+  );
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+//TODO: the firebase initializeapp must be first called before the main app is displayed 
+//todo uncomment th code below for this to happen then run the call to App class above
+
+class App extends StatefulWidget {
+  @override
+  _AppState createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  bool _initialized = false;
+  bool _error = false;
+  bool _isLoggedin = false;
+
+  //check if user is loggedin
+  checkUserLoggedInStatus() async {
+    _isLoggedin = await HelperFunctions.getuserLoggedInDetails().then((value) {
+      setState(() {
+        _isLoggedin = value;
+      });
+    });
+  }
+
+  // Define an async function to initialize FlutterFire
+  void initializeFlutterFire() async {
+    try {
+      // Wait for Firebase to initialize and set `_initialized` state to true
+      await Firebase.initializeApp();
+      setState(() {
+        _initialized = true;
+      });
+    } catch (e) {
+      // Set `_error` state to true if Firebase initialization fails
+      setState(() {
+        _error = true;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    initializeFlutterFire();
+    checkUserLoggedInStatus();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (_error) {
+      return Container(
+          child: Center(
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.red,
+        ),
+      ));
+    }
+
+    // Show a loader until FlutterFire is initialized
+    if (!_initialized) {
+      return Container(
+          child: Center(
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.green,
+        ),
+      ));
+    }
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: appBar(context),
-          backgroundColor: Colors.transparent,
-          elevation: 2.0,
-          brightness: Brightness.light,
-        ),
-        body: FutureBuilder(
-          future: _initialization,
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasError) {
-              return Container(
-                  child: Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Colors.red,
-                ),
-              ));
-            }
-            if (snapshot.connectionState == ConnectionState.done) {
-              return Container(
-                child: Center(
-                  child: SafeArea(
-                      child: Column(
-                    children: [
-                      RaisedButton(
-                          child: Center(
-                            child: Text(
-                              "Login",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                          color: Colors.brown,
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SignIn()));
-                          }),
-                          SizedBox(height: 10,),
-                          Text(
-                            "Or",
-                            style: TextStyle(color: Colors.black),
-                          ),
-                          SizedBox(height: 10,),
-                      FlatButton(
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SignUp()));
-                          },
-                          child: Center(
-                            child: Text(
-                              "SignUp",
-                              style: TextStyle(color: Colors.brown)
-                            ),
-                          ))
-                    ],
-                  )),
-                ),
-              );
-            } else {
-              return Container(
-                  child: Center(
-                child:
-                    HeartbeatProgressIndicator(child: Icon(Icons.account_box)),
-              ));
-            }
-          },
-        ),
-      ),
+      home: (_isLoggedin ?? false) ? Home() : SignIn(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
+

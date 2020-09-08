@@ -1,6 +1,7 @@
 //import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:kazimanager_withauth/helper/functions.dart';
 import 'package:kazimanager_withauth/screens/authenticate/signUp.dart';
 import 'package:kazimanager_withauth/screens/home/home.dart';
 import 'package:kazimanager_withauth/screens/widgets/widget.dart';
@@ -17,33 +18,13 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
   String email, password;
-  /*bool _initialized = false;
-  bool _error = false;*/
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+  
+  
 
   //final FirebaseAuth _auth = FirebaseAuth.instance;
 
   //TODO find the new FlutterFire implementation on this
-  /*void initializeFlutterFire() async {
-    try {
-      // Wait for Firebase to initialize and set `_initialized` state to true
-      await Firebase.initializeApp();
-      setState(() {
-        _initialized = true;
-      });
-    } catch (e) {
-      // Set `_error` state to true if Firebase initialization fails
-      setState(() {
-        _error = true;
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    initializeFlutterFire();
-    super.initState();
-  }*/
+  
 
   AuthService authService = new AuthService();
   bool _isLoading = false;
@@ -54,6 +35,9 @@ class _SignInState extends State<SignIn> {
       //userCredential.signInEmail
       //UserCredential userCredential
       //TODO find the new FlutterFire implementation on this
+      Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => Home()));
+      return;
 
       setState(() {
         _isLoading = true;
@@ -64,6 +48,7 @@ class _SignInState extends State<SignIn> {
           setState(() {
             _isLoading = false;
           });
+          HelperFunctions.saveUserLoggedInDetails(isLoggedIn: true);
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => Home()));
         }
@@ -74,14 +59,14 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    //if initialization fails
-    
+
     return Scaffold(
       appBar: AppBar(
-        title: appBar(context),
+        title: appBar(context, "kazi", "Manager"),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         brightness: Brightness.light,
+        centerTitle: true,
       ),
       body: _isLoading
           ? Container(
@@ -130,18 +115,7 @@ class _SignInState extends State<SignIn> {
                           //sign in button; logs user in
                           signIn();
                         },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 18),
-                          decoration: BoxDecoration(
-                              color: Colors.brown,
-                              borderRadius: BorderRadius.circular(30)),
-                          alignment: Alignment.center,
-                          width: MediaQuery.of(context).size.width - 48,
-                          child: Text(
-                            "Login",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                        ),
+                        child: blueButton(context: context, label:"Login"),
                       ),
                       SizedBox(height: 16),
                       Row(

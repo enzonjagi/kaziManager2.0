@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:kazimanager_withauth/helper/functions.dart';
 import 'package:kazimanager_withauth/screens/authenticate/signIn.dart';
 import 'package:kazimanager_withauth/screens/home/home.dart';
 import 'package:kazimanager_withauth/screens/widgets/widget.dart';
@@ -15,8 +16,8 @@ class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
   String u_name, email, password, confirm_pwd;
   AuthService authService = new AuthService();
-  /*bool _initialized = false;
-  bool _error = false;*/
+  bool _initialized = false;
+  bool _error = false;
   bool _isLoading = false;
 
   /*void initializeFlutterFire() async {
@@ -41,16 +42,18 @@ class _SignUpState extends State<SignUp> {
   }*/
 
   signUp() async {
-    await authService.initiialize();
+    //await authService.initiialize();
     if (_formKey.currentState.validate()) {
-      setState(() {
+            setState(() {
         _isLoading = true;
       });
+      
       await authService.createUser(email, password).then((val) {
         if (val != null) {
           setState(() {
             _isLoading = false;
           });
+          HelperFunctions.saveUserLoggedInDetails(isLoggedIn: true);
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => Home()));
         }
@@ -61,13 +64,28 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-    
+    /*if (_error) {
+      return Container(
+          child: Center(
+        child: HeartbeatProgressIndicator(child: Icon(Icons.account_box)),
+      ));
+    }
+    if (!_initialized) {
+      return Container(
+          child: Center(
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.red,
+        ),
+      ));
+    }*/
+
     return Scaffold(
       appBar: AppBar(
-        title: appBar(context),
+        title: appBar(context, "kazi", "Manager"),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         brightness: Brightness.light,
+        centerTitle: true,
       ),
       body: _isLoading
           ? Container(
@@ -124,18 +142,7 @@ class _SignUpState extends State<SignUp> {
                           //should register the user
                           signUp();
                         },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 18),
-                          decoration: BoxDecoration(
-                              color: Colors.brown,
-                              borderRadius: BorderRadius.circular(30)),
-                          alignment: Alignment.center,
-                          width: MediaQuery.of(context).size.width - 48,
-                          child: Text(
-                            "SignUp",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                        ),
+                        child: blueButton(context: context, label:"SignUp"),
                       ),
                       SizedBox(height: 16),
                       Row(

@@ -5,9 +5,11 @@ class AuthService {
   //instance of firebase auth
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  
 
   //check for auth changes
-  /*dynamic checkAuth(String email, password) async{
+  dynamic checkAuth(String email, password) async{
+    //await _initialization;
     await _auth.authStateChanges().listen((User user) {
       if (user == null){
         print("User is currently signed out");
@@ -16,19 +18,20 @@ class AuthService {
         return user;
       }
      });
-  }*/
+  }
+
 
   //sign in anon
   Future initiialize() async {
     try {
       // Wait for Firebase to initialize and set `_initialized` state to true
       await Firebase.initializeApp();
-      
-    } catch(e) {
+    } catch (e) {
       // Set `_error` state to true if Firebase initialization fails
-      
+
     }
   }
+
   dynamic signInAnon() async {
     UserCredential userCredential = await _auth.signInAnonymously();
     return userCredential;
@@ -36,7 +39,7 @@ class AuthService {
 
   //signin email and password
   dynamic signInEmailandPass(String email, password) async {
-    await _initialization;
+    //await _initialization;
     try {
       //await _initialization;
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
@@ -53,9 +56,8 @@ class AuthService {
 
   //register with email and password
   dynamic createUser(String email, password) async {
-    await _initialization;
+    //await _initialization;
     try {
-      
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
       return userCredential;
@@ -83,7 +85,6 @@ class AuthService {
   //signout
   dynamic signOut() async {
     try {
-      
       return await _auth.signOut();
     } catch (e) {
       print(e.toString());
