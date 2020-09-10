@@ -69,7 +69,7 @@ class _AddTodoState extends State<AddTodo> {
                         height: 6,
                       ),
                       TextFormField(
-                        decoration: InputDecoration(hintText: "Status"),
+                        decoration: InputDecoration(hintText: "To-Do description"),
                         validator: (val) =>
                             val.isEmpty ? "Field is required" : null,
                         onChanged: (val) {
