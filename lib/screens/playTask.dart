@@ -6,6 +6,7 @@ import 'package:kazimanager_withauth/screens/taskresults.dart';
 import 'package:kazimanager_withauth/screens/widgets/taskWidget.dart';
 import 'package:kazimanager_withauth/screens/widgets/widget.dart';
 import 'package:kazimanager_withauth/services/database.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class PlayTask extends StatefulWidget {
@@ -103,35 +104,15 @@ class _PlayTaskState extends State<PlayTask> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 10),
-                          child: SfRadialGauge(axes: <RadialAxis>[
-                            RadialAxis(
-                                /*minimum: 0,
-                                maximum: 100,*/
-                                showLabels: false,
-                                showTicks: false,
-                                startAngle: 180,
-                                endAngle: 0,
-                                radiusFactor: 0.7,
-                                canScaleToFit: true,
-                                axisLineStyle: AxisLineStyle(
-                                    thickness: 0.1,
-                                    color: Colors.brown,
-                                    thicknessUnit: GaugeSizeUnit.factor,
-                                    cornerStyle: CornerStyle.startCurve),
-                                pointers: <GaugePointer>[
-                                  RangePointer(
-                                      value: _progressValue,
-                                      width: 0.05,
-                                      pointerOffset: 0.07,
-                                      sizeUnit: GaugeSizeUnit.factor,
-                                      enableAnimation: true,
-                                      animationType: AnimationType.linear)
-                                ]),
-                            RadialAxis(),
-                          ]),
-                        ),
+                            padding: EdgeInsets.all(10),
+                            child: new LinearPercentIndicator(
+                                width: MediaQuery.of(context).size.width - 50,
+                                animation: true,
+                                lineHeight: 20.0,
+                                percent: 0.8,
+                                center: Text("Completed: $_attempted"),
+                                linearStrokeCap: LinearStrokeCap.roundAll,
+                                progressColor: Colors.brown)),
                         ListView.builder(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 24, vertical: 10),

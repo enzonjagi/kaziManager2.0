@@ -35,7 +35,7 @@ dependencies:
   progress_indicators: ^0.1.5
   firebase_analytics: "^6.0.0"
   syncfusion_flutter_gauges: ^18.2.44
-  percentage_indicator: ^2.1.6
+  percent_indicator: ^2.1.6
   
   
 
