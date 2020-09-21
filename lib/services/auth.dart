@@ -12,7 +12,19 @@ class AuthService {
     //await _initialization;
     await _auth.authStateChanges().listen((User user) {
       if (user == null){
-        print("User is currently signed out");
+        return user = null;
+      }else{
+        print("User is signed in");
+        return user;
+      }
+     });
+  }
+
+  Future<bool> isUserLoggedIn() async {
+
+    await _auth.authStateChanges().listen((User user) {
+      if (user == null){
+        return user = null;
       }else{
         print("User is signed in");
         return user;
@@ -47,9 +59,9 @@ class AuthService {
       return userCredential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
+        return ('No user found for that email.');
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+        return ('Wrong password provided for that user.');
       }
     }
   }
@@ -63,9 +75,9 @@ class AuthService {
       return userCredential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        return ('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        return ('The account already exists for that email.');
       }
     } catch (e) {
       print(e.toString());
@@ -74,13 +86,13 @@ class AuthService {
 
   //email verification
   //correct it and add the flutter fire verification code block later
-  /*dynamic verifyEmail() async {
+  dynamic verifyEmail() async {
     User user = _auth.currentUser;
     if(!user.emailVerified){
       await user.sendEmailVerification();
     }
 
-  }*/
+  }
 
   //signout
   dynamic signOut() async {

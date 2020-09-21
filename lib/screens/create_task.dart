@@ -13,11 +13,15 @@ class CreateTask extends StatefulWidget {
 }
 
 class _CreateTaskState extends State<CreateTask> {
+  //Holders for task details
   String taskName, taskDescription, taskAssignee, taskId, dateAssigned;
+
+  //formkey to use for the task form
   final _formKey = GlobalKey<FormState>();
   //instance of the DatabaseService class that interacts with firebase
   DatabaseService databaseService = new DatabaseService();
 
+  //waiting for firebase
   bool _isLoading = false;
 
   ///this function adds the data to firebase  
@@ -29,8 +33,8 @@ class _CreateTaskState extends State<CreateTask> {
       });
       taskId = randomAlphaNumeric(16);
 
-      Map<String, String> map = {
-        "taskID": taskId,
+      Map<String, String> taskmap = {
+        "taskId": taskId,
         "taskName": taskName,
         "taskDesc": taskDescription,
         "taskAssignee": taskAssignee,
@@ -38,7 +42,7 @@ class _CreateTaskState extends State<CreateTask> {
       };
 
       //waiting for the data to upload
-      await databaseService.addTaskData(map, taskId).then((value) {
+      await databaseService.addTaskData(taskmap, taskId).then((value) {
         setState(() {
           _isLoading = false;
         });
@@ -116,33 +120,31 @@ class _CreateTaskState extends State<CreateTask> {
                       SizedBox(
                         height: 6,
                       ),
-                      Card(
-                          child: Padding(
-                              padding: const EdgeInsets.fromLTRB(5, 20, 5, 10),
-                              child: Column(
-                                children: [
-                                  Text("Task Deadline"),
-                                  IconButton(
-                                    icon: Icon(Icons.calendar_today),
-                                    onPressed: () {
-                                      //open a date picker
-                                      showDatePicker(
-                                        context: context,
-                                        initialDate: dateAssigned == null
-                                            ? DateTime.now()
-                                            : dateAssigned,
-                                        firstDate: DateTime(2020),
-                                        lastDate: DateTime(2099),
-                                      ).then((date) {
-                                        setState(() {
-                                          dateAssigned = date.toString();
-                                        });
-                                      });
-                                    },
-                                  ),
-                                ],
-                              )),
-                        ),
+                      Padding(
+                          padding: const EdgeInsets.fromLTRB(5, 20, 5, 10),
+                          child: Column(
+                            children: [
+                              Text("Task Deadline"),
+                              IconButton(
+                                icon: Icon(Icons.calendar_today),
+                                onPressed: () {
+                                  //open a date picker
+                                  showDatePicker(
+                                    context: context,
+                                    initialDate: dateAssigned == null
+                                        ? DateTime.now()
+                                        : dateAssigned,
+                                    firstDate: DateTime(2020),
+                                    lastDate: DateTime(2099),
+                                  ).then((date) {
+                                    setState(() {
+                                      dateAssigned = date.toString();
+                                    });
+                                  });
+                                },
+                              ),
+                            ],
+                          )),
                       Spacer(),
                       GestureDetector(
                         onTap: () {

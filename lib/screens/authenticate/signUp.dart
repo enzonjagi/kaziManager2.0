@@ -5,6 +5,7 @@ import 'package:kazimanager_withauth/screens/authenticate/signIn.dart';
 import 'package:kazimanager_withauth/screens/home/home.dart';
 import 'package:kazimanager_withauth/screens/widgets/widget.dart';
 import 'package:kazimanager_withauth/services/auth.dart';
+import 'package:kazimanager_withauth/services/database.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 
 class SignUp extends StatefulWidget {
@@ -16,30 +17,8 @@ class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
   String u_name, email, password, confirm_pwd;
   AuthService authService = new AuthService();
-  bool _initialized = false;
-  bool _error = false;
+  DatabaseService databaseService = new DatabaseService();
   bool _isLoading = false;
-
-  /*void initializeFlutterFire() async {
-    try {
-      // Wait for Firebase to initialize and set `_initialized` state to true
-      await Firebase.initializeApp();
-      setState(() {
-        _initialized = true;
-      });
-    } catch (e) {
-      // Set `_error` state to true if Firebase initialization fails
-      setState(() {
-        _error = true;
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    initializeFlutterFire();
-    super.initState();
-  }*/
 
   signUp() async {
     //await authService.initiialize();
@@ -48,6 +27,7 @@ class _SignUpState extends State<SignUp> {
         _isLoading = true;
       });
       
+      //create a user
       await authService.createUser(email, password).then((val) {
         if (val != null) {
           setState(() {
@@ -58,26 +38,21 @@ class _SignUpState extends State<SignUp> {
               context, MaterialPageRoute(builder: (context) => Home()));
         }
       });
+
+      //add user to user collection in Firestore
+      Map<String, String> userData = {
+        "username": u_name,
+        "email": email
+      };
+      await databaseService.addUserData(userData, u_name);
+
     }
     _formKey.currentState.save();
   }
+  
 
   @override
   Widget build(BuildContext context) {
-    /*if (_error) {
-      return Container(
-          child: Center(
-        child: HeartbeatProgressIndicator(child: Icon(Icons.account_box)),
-      ));
-    }
-    if (!_initialized) {
-      return Container(
-          child: Center(
-        child: CircularProgressIndicator(
-          backgroundColor: Colors.red,
-        ),
-      ));
-    }*/
 
     return Scaffold(
       appBar: AppBar(
@@ -110,15 +85,10 @@ class _SignUpState extends State<SignUp> {
                       ),
                       TextFormField(
                         validator: (val) {
-                          if (val.isEmpty) {
-                            return 'Email is required';
-                          }
 
-                          if (!RegExp(
+                          return val.isEmpty && !RegExp(
                                   "^[a-zA-Z0-9.!#%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*")
-                              .hasMatch(val)) {
-                            return 'Enter a valid email address';
-                          }
+                              .hasMatch(val) ? 'Valid email is required' : null;
                         },
                         decoration: InputDecoration(hintText: "Email"),
                         onChanged: (val) {

@@ -29,7 +29,7 @@ class _SignInState extends State<SignIn> {
   AuthService authService = new AuthService();
   bool _isLoading = false;
 
-  signIn() async {
+  void signIn() async {
     //await authService.initiialize();
     if (_formKey.currentState.validate()) {
       //userCredential.signInEmail
@@ -37,7 +37,7 @@ class _SignInState extends State<SignIn> {
       //TODO find the new FlutterFire implementation on this
       Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => Home()));
-      return;
+      
 
       setState(() {
         _isLoading = true;
@@ -54,7 +54,7 @@ class _SignInState extends State<SignIn> {
         }
       });
     }
-    _formKey.currentState.save();
+    //_formKey.currentState.save();
   }
 
   @override
@@ -83,15 +83,9 @@ class _SignInState extends State<SignIn> {
                       Spacer(),
                       TextFormField(
                         validator: (val) {
-                          if (val.isEmpty) {
-                            return 'Email is required';
-                          }
-
-                          if (!RegExp(
+                          return val.isEmpty && !RegExp(
                                   "^[a-zA-Z0-9.!#%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*")
-                              .hasMatch(val)) {
-                            return 'Enter a valid email address';
-                          }
+                              .hasMatch(val) ? 'Valid email is required' : null;
                         },
                         decoration: InputDecoration(hintText: "Email"),
                         onChanged: (val) {

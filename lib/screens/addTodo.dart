@@ -10,7 +10,7 @@ class AddTodo extends StatefulWidget {
 }
 
 class _AddTodoState extends State<AddTodo> {
-  String todoName, todoStatus;
+  String todoName, todoDesc;
   bool _isLoading = false;
   DatabaseService databaseService = new DatabaseService();
 
@@ -22,10 +22,10 @@ class _AddTodoState extends State<AddTodo> {
 
       Map<String, String> todoMap = {
         "todoName": todoName,
-        "todoStatus": todoStatus,
+        "todoDesc": todoDesc,
       };
 
-      await databaseService.addTaskData(todoMap, widget.taskId).then((value) {
+      await databaseService.addTodoitem(todoMap, widget.taskId).then((value) {
         setState(() {
           _isLoading = false;
         });
@@ -73,7 +73,7 @@ class _AddTodoState extends State<AddTodo> {
                         validator: (val) =>
                             val.isEmpty ? "Field is required" : null,
                         onChanged: (val) {
-                          todoStatus = val;
+                          todoDesc = val;
                         },
                       ),
                       Spacer(),

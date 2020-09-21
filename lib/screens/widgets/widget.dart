@@ -17,7 +17,7 @@ Widget appBar(BuildContext context, String first,  String second) {
   ));
 }
 
-class CustomDrawer extends StatelessWidget {
+/*class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -65,7 +65,7 @@ class CustomDrawer extends StatelessWidget {
       ),
     );
   }
-}
+}*/
 
 class AppBarSearch extends StatelessWidget {
   @override
@@ -108,3 +108,4 @@ Widget blueButton({BuildContext context, String label, buttonWidth} ) {
     ),
   );
 }
+
