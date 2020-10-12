@@ -16,7 +16,7 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
   String u_name, email, password, confirm_pwd;
-  AuthService authService = new AuthService();
+  AuthService authService;
   DatabaseService databaseService = new DatabaseService();
   bool _isLoading = false;
   DatabaseService dbService = new DatabaseService();

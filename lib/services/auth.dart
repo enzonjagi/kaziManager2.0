@@ -3,60 +3,28 @@ import 'package:firebase_core/firebase_core.dart';
 
 class AuthService {
   //instance of firebase auth
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  
+
+  final FirebaseAuth _auth;
+
+  AuthService(this._auth);
 
   //check for auth changes
-  dynamic checkAuth(String email, password) async{
-    //await _initialization;
-    await _auth.authStateChanges().listen((User user) {
-      if (user == null){
-        return user = null;
-      }else{
-        print("User is signed in");
-        return user;
-      }
-     });
-  }
-
-  Future<bool> isUserLoggedIn() async {
-
-    await _auth.authStateChanges().listen((User user) {
-      if (user == null){
-        return user = null;
-      }else{
-        print("User is signed in");
-        return user;
-      }
-     });
-  }
-
+  Stream<User> get authStateChanges => _auth.authStateChanges();
 
   //sign in anon
-  Future initiialize() async {
-    try {
-      // Wait for Firebase to initialize and set `_initialized` state to true
-      await Firebase.initializeApp();
-    } catch (e) {
-      // Set `_error` state to true if Firebase initialization fails
 
-    }
-  }
-
-  dynamic signInAnon() async {
-    UserCredential userCredential = await _auth.signInAnonymously();
-    return userCredential;
+  Future<String> signInAnon() async {
+    await _auth.signInAnonymously();
+    return "Signed in anonymously";
   }
 
   //signin email and password
-  dynamic signInEmailandPass(String email, password) async {
+  Future<String> signInEmailandPass(String email, password) async {
     //await _initialization;
     try {
       //await _initialization;
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      return userCredential;
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      return "Signed in";
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         return ('No user found for that email.');
@@ -67,12 +35,12 @@ class AuthService {
   }
 
   //register with email and password
-  dynamic createUser(String email, password) async {
+  Future<String> createUser(String email, password) async {
     //await _initialization;
     try {
-      UserCredential userCredential = await _auth
-          .createUserWithEmailAndPassword(email: email, password: password);
-      return userCredential;
+      await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      return "Signed Up";
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         return ('The password provided is too weak.');
@@ -88,20 +56,15 @@ class AuthService {
   //correct it and add the flutter fire verification code block later
   dynamic verifyEmail() async {
     User user = _auth.currentUser;
-    if(!user.emailVerified){
+    if (!user.emailVerified) {
       await user.sendEmailVerification();
     }
-
   }
 
   //signout
-  dynamic signOut() async {
-    try {
-      return await _auth.signOut();
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
+  Future<void> signOut() async {
+    
+    await _auth.signOut();
   }
 
   //google sign in

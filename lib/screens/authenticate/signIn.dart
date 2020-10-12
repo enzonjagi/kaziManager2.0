@@ -26,7 +26,7 @@ class _SignInState extends State<SignIn> {
   //TODO find the new FlutterFire implementation on this
   
 
-  AuthService authService = new AuthService();
+  AuthService authService;
   bool _isLoading = false;
 
   void signIn() async {
@@ -42,6 +42,7 @@ class _SignInState extends State<SignIn> {
       setState(() {
         _isLoading = true;
       });
+      
 
       await authService.signInEmailandPass(email, password).then((val) {
         if (val != null) {
@@ -107,6 +108,7 @@ class _SignInState extends State<SignIn> {
                       GestureDetector(
                         onTap: () {
                           //sign in button; logs user in
+                          
                           signIn();
                         },
                         child: blueButton(context: context, label:"Login"),
