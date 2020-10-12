@@ -19,6 +19,8 @@ class _SignUpState extends State<SignUp> {
   AuthService authService = new AuthService();
   DatabaseService databaseService = new DatabaseService();
   bool _isLoading = false;
+  DatabaseService dbService = new DatabaseService();
+  
 
   signUp() async {
     //await authService.initiialize();
@@ -26,25 +28,31 @@ class _SignUpState extends State<SignUp> {
             setState(() {
         _isLoading = true;
       });
+
+      //adding a map to user collection
+      //add user to user collection in Firestore
+      Map<String, String> userData = {
+        "username": u_name,
+        "email": email,
+        "password": password
+      };
       
       //create a user
-      await authService.createUser(email, password).then((val) {
+      await authService.createUser(email, password).then((val) async {
         if (val != null) {
           setState(() {
             _isLoading = false;
           });
           HelperFunctions.saveUserLoggedInDetails(isLoggedIn: true);
+
+          await databaseService.addUserData(userData, u_name);
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => Home()));
+              context, MaterialPageRoute(builder: (context) => SignIn()));
         }
       });
 
-      //add user to user collection in Firestore
-      Map<String, String> userData = {
-        "username": u_name,
-        "email": email
-      };
-      await databaseService.addUserData(userData, u_name);
+      
+      await databaseService.addUserData(userData, u_name).then((value) => null);
 
     }
     _formKey.currentState.save();

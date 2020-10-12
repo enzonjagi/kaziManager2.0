@@ -99,87 +99,32 @@ class _PlayTaskState extends State<PlayTask> {
             : Container(
                 child: Center(
                   child: Card(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                            padding: EdgeInsets.all(10),
-                            child: new LinearPercentIndicator(
-                                width: MediaQuery.of(context).size.width - 50,
-                                animation: true,
-                                lineHeight: 20.0,
-                                percent: 0.8,
-                                center: Text("Completed: $_attempted"),
-                                linearStrokeCap: LinearStrokeCap.roundAll,
-                                progressColor: Colors.brown)),
-                        ListView.builder(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 24, vertical: 10),
-                            shrinkWrap: true,
-                            physics: ClampingScrollPhysics(),
-                            itemCount: todoSnapshot.docs.length,
-                            itemBuilder: (context, index) {
-                              return PlayTile(
-                                  todopartsModel:
-                                      getTaskModelDataFromDocSnapshot(
-                                          todoSnapshot.docs[index]),
-                                  index: index);
-                            }),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                  onTap: () {
-                                    //saves progress then pops back then adds the task to firebase
-                                  },
-                                  child: blueButton(
-                                      context: context,
-                                      label: "Complete",
-                                      buttonWidth:
-                                          MediaQuery.of(context).size.width /
-                                                  2 -
-                                              36)),
-                              SizedBox(width: 24),
-                              GestureDetector(
-                                  onTap: () {
-                                    //saves the task as it is to firebase
-                                    //goes back to the home widget
-                                  },
-                                  child: blueButton(
-                                      context: context,
-                                      label: "Save",
-                                      buttonWidth:
-                                          MediaQuery.of(context).size.width /
-                                                  2 -
-                                              36)),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        )
-                      ],
-                    ),
+                    child: ListView.builder(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                        itemCount: todoSnapshot.docs.length,
+                        itemBuilder: (context, index) {
+                          return PlayTile(
+                              todopartsModel: getTaskModelDataFromDocSnapshot(
+                                  todoSnapshot.docs[index]),
+                              index: index);
+                        }),
                   ),
                 ),
               )
       ])),
-      /*floatingActionButton: FloatingActionButton(
+
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.done ),
         onPressed: () {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => TaskResults(
-                    total: _totalTodos,
-                    attempted: _attempted,
-                    notattempted: _notAttempted),
-              ));
+
+          //TODO mark the task as complete and add it to the completed tasks counter
+          Navigator.pop(context);
+          
         },
-      ),*/
+      ),
     );
   }
 }

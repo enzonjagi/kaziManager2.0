@@ -82,7 +82,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: appBar(context, "kazi", "Manager"),
+        title: appBar(context, "my", "Tasks"),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         brightness: Brightness.light,
@@ -99,6 +99,8 @@ class _HomeState extends State<Home> {
               ));
         },
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomNavbar(),
     );
   }
 }
@@ -146,14 +148,6 @@ class TaskTile extends StatelessWidget {
                           fontSize: 20,
                           fontWeight: FontWeight.w600),
                     ),
-                    SizedBox(height: 4),
-                    /*Text(
-                      "Task: " + taskDescription,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500),
-                    ),*/
                     SizedBox(height: 4),
                     Text(
                       "Assigned: " + assignee,

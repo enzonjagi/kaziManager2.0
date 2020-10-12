@@ -1,8 +1,11 @@
 //import 'dart:js';
 
 import 'package:flutter/material.dart';
+import 'package:kazimanager_withauth/screens/authenticate/signIn.dart';
+import 'package:kazimanager_withauth/screens/home/home.dart';
+import 'package:kazimanager_withauth/screens/reports.dart';
 
-Widget appBar(BuildContext context, String first,  String second) {
+Widget appBar(BuildContext context, String first, String second) {
   return RichText(
       text: TextSpan(
     style: TextStyle(fontSize: 22),
@@ -16,56 +19,6 @@ Widget appBar(BuildContext context, String first,  String second) {
     ],
   ));
 }
-
-/*class CustomDrawer extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      child: Drawer(
-        child: ListView(
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: <Color>[Colors.brown[500], Colors.brown[400]])),
-              child: Padding(
-                padding: const EdgeInsets.all(3.0),
-                child: Card(
-                  color: Colors.brown,
-                  child: ListTile(
-                    title: Text("kaziManager"),
-                    subtitle: Text('taskingSystem'),
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.brown[400],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Card(
-              child: ListTile(
-                  title: Text("myTasks"),
-                  leading: Icon(Icons.work),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    //Navigator.pushNamed(context, '/tasklist');
-                  }),
-            ),
-            Card(
-              child: ListTile(
-                  title: Text("taskReports"),
-                  leading: Icon(Icons.archive),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    //Navigator.pushNamed(context, '/reportlist');
-                  }),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}*/
 
 class AppBarSearch extends StatelessWidget {
   @override
@@ -95,13 +48,15 @@ class AppBarBack extends StatelessWidget {
   }
 }
 
-Widget blueButton({BuildContext context, String label, buttonWidth} ) {
+Widget blueButton({BuildContext context, String label, buttonWidth}) {
   return Container(
     padding: EdgeInsets.symmetric(vertical: 18),
     decoration: BoxDecoration(
         color: Colors.brown, borderRadius: BorderRadius.circular(30)),
     alignment: Alignment.center,
-    width: buttonWidth != null ? buttonWidth :MediaQuery.of(context).size.width - 48,
+    width: buttonWidth != null
+        ? buttonWidth
+        : MediaQuery.of(context).size.width - 48,
     child: Text(
       label,
       style: TextStyle(color: Colors.white, fontSize: 16),
@@ -109,3 +64,81 @@ Widget blueButton({BuildContext context, String label, buttonWidth} ) {
   );
 }
 
+class NavDrawer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          ListTile(
+            leading: Icon(Icons.input),
+            title: Text("Tasks", style: TextStyle(fontWeight: FontWeight.bold)),
+            onTap: () {},
+          ),
+          ListTile(
+            leading: Icon(Icons.input),
+            title: Text("Tasks", style: TextStyle(fontWeight: FontWeight.bold)),
+            onTap: () {},
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BottomNavbar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BottomAppBar(
+      shape: CircularNotchedRectangle(),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: <
+          Widget>[
+        GestureDetector(
+          onTap: () {
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => Home()));
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Icon(Icons.work),
+                SizedBox(width: 5),
+                Text(
+                  "Tasks",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => UserReports()));
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Icon(Icons.description),
+                SizedBox(width: 5),
+                Text(
+                  "Reports",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+          ),
+        ),
+        IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => SignIn()));
+            })
+      ]),
+    );
+  }
+}

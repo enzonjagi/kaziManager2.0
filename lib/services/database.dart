@@ -31,7 +31,31 @@ class DatabaseService {
     });
   }
   
-  //check user logged in status
+  //TODO add a subcollection for user tasks
+  Future<void> addUserTask(Map taskData, String taskName) async{
+    await FirebaseFirestore.instance
+    .collection("Users")
+    .doc(taskName)
+    .collection("User Task")
+    .add(taskData)
+    .catchError((e){
+      print(e.toString());
+    });
+  }
+
+  //adding todo item subcollection to the task sub collection above
+  Future<void> addUserTaskTodoitem(Map todoData, String taskName, String username) async {
+    await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(username)
+        .collection("User Task")
+        .doc(taskName)
+        .collection("Task Todos")
+        .add(todoData)
+        .catchError((e) {
+      print(e.toString());
+    });
+  }
   
 
   //to add a Todo item
@@ -49,6 +73,9 @@ class DatabaseService {
       print(e.toString());
     });
   }
+  
+
+
 
   
 
