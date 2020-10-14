@@ -35,8 +35,8 @@ class _SignInState extends State<SignIn> {
       //userCredential.signInEmail
       //UserCredential userCredential
       //TODO find the new FlutterFire implementation on this
-      Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => Home()));
+      /*Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => Home()));*/
       
 
       setState(() {
@@ -46,6 +46,7 @@ class _SignInState extends State<SignIn> {
 
       await authService.signInEmailandPass(email, password).then((val) {
         if (val != null) {
+          //TODO add the check for email and password correctness
           setState(() {
             _isLoading = false;
           });

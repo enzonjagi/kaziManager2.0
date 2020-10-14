@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kazimanager_withauth/screens/create_task.dart';
 import 'package:kazimanager_withauth/screens/playTask.dart';
@@ -16,7 +17,15 @@ class _HomeState extends State<Home> {
   bool _error = false;
   bool _getStarted = false;
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User user;
+
   DatabaseService databaseService = new DatabaseService();
+
+  initUser() async {
+    user = await _auth.currentUser;
+    setState(() {});
+  }
 
   Widget taskList() {
     if (_error) {
@@ -34,18 +43,21 @@ class _HomeState extends State<Home> {
               : ListView.builder(
                   itemCount: snapshot.data.documents.length,
                   itemBuilder: (context, index) {
-                    return TaskTile(
-                      taskName:
-                          snapshot.data.documents[index].data()["taskName"],
-                      taskDescription:
-                          snapshot.data.documents[index].data()["taskDesc"],
-                      dueDate:
-                          snapshot.data.documents[index].data()["dateAssigned"],
-                      assignee:
-                          snapshot.data.documents[index].data()["taskAssignee"],
-                      taskId:
-                          snapshot.data.documents[index].data()["taskId"],
-                    );
+                    if (user ==
+                        snapshot.data.documents[index].data()["taskAssignee"]) {
+                      return TaskTile(
+                        taskName:
+                            snapshot.data.documents[index].data()["taskName"],
+                        taskDescription:
+                            snapshot.data.documents[index].data()["taskDesc"],
+                        dueDate: snapshot.data.documents[index]
+                            .data()["dateAssigned"],
+                        assignee: snapshot.data.documents[index]
+                            .data()["taskAssignee"],
+                        taskId: snapshot.data.documents[index].data()["taskId"],
+                      );
+                    }
+                    
                   },
                 );
         },
@@ -76,6 +88,7 @@ class _HomeState extends State<Home> {
   void initState() {
     waitForDataGet();
     super.initState();
+    initUser();
   }
 
   @override

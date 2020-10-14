@@ -52,7 +52,7 @@ class _SignUpState extends State<SignUp> {
       });
 
       
-      await databaseService.addUserData(userData, u_name).then((value) => null);
+      //await databaseService.addUserData(userData, u_name).then((value) => null);
 
     }
     _formKey.currentState.save();
