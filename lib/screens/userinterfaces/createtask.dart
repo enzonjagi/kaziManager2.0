@@ -40,7 +40,7 @@ class _CreateTaskState extends State<CreateTask> {
             backgroundColor: Colors.brown[200],
             actions: <Widget>[
               //passing other widgets
-              FlatButton(
+              FloatingActionButton(
                   child: Row(children: [
                     Text("Add todo"),
                     SizedBox(width: 5.0),
@@ -201,8 +201,7 @@ class _CreateTaskState extends State<CreateTask> {
                               )),
                         ),
                         Center(
-                          child: RaisedButton(
-                            color: Colors.brown[500],
+                          child: ElevatedButton(
                             onPressed: () {
                               setState(() {
                                 //post the data using the task class
